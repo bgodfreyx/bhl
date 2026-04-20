@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deeper Dive: Packing More Than Belongings</title>
+  <style>
+    :root {
+      --bg: #f5f5f5;
+      --panel: #ffffff;
+      --text: #111111;
+      --muted: #666666;
+      --border: #dddddd;
+      --shadow: 0 6px 18px rgba(0,0,0,0.05);
+      --controls-height: 92px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: var(--text); }
+    .app { max-width: 560px; margin: 0 auto; padding: 16px 16px calc(var(--controls-height) + 24px); }
+    .topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .back { text-decoration: none; border: 1px solid var(--border); padding: 8px 12px; border-radius: 8px; color: var(--text); background: var(--panel); box-shadow: var(--shadow); flex: 0 0 auto; }
+    h1 { font-size: 1.2rem; margin: 0; line-height: 1.2; }
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; box-shadow: var(--shadow); margin-bottom: 12px; }
+    .tour-heading { margin: 0 0 12px; font-size: 1.15rem; line-height: 1.25; }
+    .tour-description { margin: 0 0 14px; font-size: 0.95rem; line-height: 1.5; color: var(--text); }
+    .tour-description:last-child { margin-bottom: 0; }
+    .player-bar { position: fixed; left: 0; right: 0; bottom: 0; background: #ffffff; border-top: 1px solid var(--border); box-shadow: 0 -4px 16px rgba(0,0,0,0.04); padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); }
+    .player-inner { max-width: 560px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; align-items: center; }
+    .audio-btn { width: 100%; min-height: 44px; border: 1px solid var(--border); border-radius: 10px; background: var(--panel); color: var(--text); font-size: 0.95rem; cursor: pointer; padding: 8px 6px; }
+    .audio-btn.play { font-weight: 700; }
+    @media (min-width: 700px) { h1 { font-size: 1.3rem; } }
+
+    .topbar h1 {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .menu-button {
+      margin-left: auto;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      color: var(--text);
+      font-size: 1.15rem;
+      line-height: 1;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+
+    .menu-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.18);
+      z-index: 20;
+    }
+
+    .tour-menu {
+      position: fixed;
+      top: 72px;
+      left: 16px;
+      right: 16px;
+      max-width: 560px;
+      margin: 0 auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      z-index: 21;
+      padding: 12px;
+    }
+
+    .tour-menu h2 {
+      margin: 0 0 8px;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .tour-menu ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 6px;
+      max-height: 70vh;
+      overflow: auto;
+    }
+
+    .tour-menu a {
+      display: block;
+      text-decoration: none;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #fafafa;
+    }
+
+    .tour-menu a.active {
+      background: #e9e9e9;
+      font-weight: 700;
+    }
+
+    .menu-title {
+      display: block;
+      line-height: 1.2;
+      font-size: 0.98rem;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <a class="back" href="35_BedroomE.html">← Back</a>
+      <h1>Deeper Dive: Packing More Than Belongings</h1>
+    
+      <button class="menu-button" id="menuButton" type="button" aria-label="Open tour menu" aria-expanded="false" aria-controls="tourMenu">☰</button>
+    </div>
+    <section class="card">
+      <h2 class="tour-heading">Deeper Dive: Packing More Than Belongings</h2>
+      <p class="tour-description">Look in the travel chest. The objects in this chest represent what Willard might have packed to take with him to West Point. Think about things you take with you on a long trip. What do you want to remember when you’re away from your family and friends?</p>
+      <p class="tour-description">Two things we know Willard had with him at West Point are a photo of his father and a letter Brigham wrote a few days before Willard departed from home.</p>
+      <p class="tour-description">At that time, public opinion was harsh toward Latter-day Saints because of plural marriage. Brigham’s letter of encouragement and advice shows his hope that Willard would remember the gospel, his family, and God in the face of public scrutiny and potential prejudice.</p>
+      <p class="tour-description">Find the letter in the room or view the transcript in the app.</p>
+      <p class="tour-description">View Transcript of Brigham’s letter to Willard, 1871. (CR 1234 1 B0008 v0012 item 1436-8)</p>
+      <p class="tour-description">May 19, 1871</p>
+      <p class="tour-description">Mr. Willard Young</p>
+      <p class="tour-description">My dear Son,</p>
+      <p class="tour-description">As you are about to leave home for a season and those with whom you have been in the habit of associating for years, many of whom are near and dear to you, a few words of advice may not prove unreasonable.</p>
+      <p class="tour-description">In entering the academy at West Point you are taking a step which may prove to you of incalculable advantage. You are thereby enjoying a privilege which falls to the lot of comparatively few. You will do well to treasure up the instruction so abundantly provided there, that in after years you may be prepared to take a place even in the foremost ranks of the great men of the nation. Experience will teach you that the greatest success does not attend the over-studious, and a proper regard must be had to physical as well as intellectual exercise, else the intellectual powers become impaired; and therefore, bodily recreation and rest are as necessary as they are beneficial to mental study.</p>
+      <p class="tour-description">Every facility will be afforded you at home by your friends in the furtherance of your studies, and I have no doubt that a straightforward, manly, upright course on your part will give you favor with and ensure you valuable aid from your fellow students.</p>
+      <p class="tour-description">Bear in mind, above all, the God whom we serve. Let your prayers day and night ascend to him for light and intelligence, and let your daily walk and conversation be such, that when you shall have returned home you can look back to the time passed at West Point and see no stain upon your character. You will doubtless have your trials and temptations, but if you will live near the Lord, you will hear the still, small voice whisper to you even in the moment of danger. Attend strictly to your own business, be kind and courteous to all, be sober and temperate in all your habits, shun the society of the unvirtuous and the intemperate, and should any person ask you to drink intoxicating liquor of any kind, except in sickness, never accept it. Select your own company rather than have others select yours.</p>
+      <p class="tour-description">If at any time you feel overtaxed or homesick, seek relaxation in the society of our elders in New York, or in other places where they may be traveling, that is, when the rules of the institution or special license permit your leave of absence.</p>
+      <p class="tour-description">Write to me frequently and any assistance you need that I can furnish will be provided. May God bless you and preserve you from every snare and give you His holy Spirit to light your path before you, and help qualify you for usefulness in His kingdom.</p>
+      <p class="tour-description">Your affectionate father,</p>
+      <p class="tour-description">Brigham Young</p>
+    </section>
+  </div>
+  <div class="player-bar" role="region" aria-label="Audio controls">
+    <div class="player-inner">
+      <button class="audio-btn" id="toStartBtn" aria-label="Skip to start">|&lt;</button>
+      <button class="audio-btn" id="back15Btn" aria-label="Skip back 15 seconds">-15</button>
+      <button class="audio-btn play" id="playPauseBtn" aria-label="Play audio">Play ▶</button>
+      <button class="audio-btn" id="forward15Btn" aria-label="Skip forward 15 seconds">15+</button>
+      <button class="audio-btn" id="toEndBtn" aria-label="Skip to end">&gt;|</button>
+    </div>
+  </div>
+  <audio id="audio">
+    <source src="bytour/36_PackingMoreThanBelongings.mp3" type="audio/mpeg">
+    Your browser does not support audio.
+  </audio>
+  <script>
+    const audio = document.getElementById('audio');
+    const toStartBtn = document.getElementById('toStartBtn');
+    const back15Btn = document.getElementById('back15Btn');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const forward15Btn = document.getElementById('forward15Btn');
+    const toEndBtn = document.getElementById('toEndBtn');
+
+    function updatePlayLabel() {
+      playPauseBtn.textContent = audio.paused ? 'Play ▶' : 'Pause ❚❚';
+      playPauseBtn.setAttribute('aria-label', audio.paused ? 'Play audio' : 'Pause audio');
+    }
+
+    function clampTime(time) {
+      if (!Number.isFinite(audio.duration)) return Math.max(0, time);
+      return Math.min(Math.max(0, time), audio.duration);
+    }
+
+    toStartBtn.addEventListener('click', () => { audio.currentTime = 0; });
+    back15Btn.addEventListener('click', () => { audio.currentTime = clampTime(audio.currentTime - 15); });
+    playPauseBtn.addEventListener('click', async () => {
+      if (audio.paused) {
+        try { await audio.play(); } catch (err) { return; }
+      } else { audio.pause(); }
+      updatePlayLabel();
+    });
+    forward15Btn.addEventListener('click', () => { audio.currentTime = clampTime(audio.currentTime + 15); });
+    toEndBtn.addEventListener('click', () => { if (Number.isFinite(audio.duration)) { audio.currentTime = Math.max(0, audio.duration - 0.1); } });
+    audio.addEventListener('play', updatePlayLabel);
+    audio.addEventListener('pause', updatePlayLabel);
+    audio.addEventListener('ended', updatePlayLabel);
+    audio.addEventListener('loadedmetadata', () => { if (!audio.currentTime) audio.currentTime = 0; });
+</script>
+
+  <script>
+    const menuButton = document.getElementById('menuButton');
+    const tourMenu = document.getElementById('tourMenu');
+    const menuBackdrop = document.getElementById('menuBackdrop');
+
+    function openMenu() {
+      tourMenu.hidden = false;
+      menuBackdrop.hidden = false;
+      menuButton.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeMenu() {
+      tourMenu.hidden = true;
+      menuBackdrop.hidden = true;
+      menuButton.setAttribute('aria-expanded', 'false');
+    }
+
+    if (menuButton && tourMenu && menuBackdrop) {
+      const current = window.location.pathname.split('/').pop();
+      tourMenu.querySelectorAll('a').forEach((link) => {
+        if (link.getAttribute('href') === current) {
+          link.classList.add('active');
+        }
+        link.addEventListener('click', closeMenu);
+      });
+
+      menuButton.addEventListener('click', () => {
+        if (tourMenu.hidden) {
+          openMenu();
+        } else {
+          closeMenu();
+        }
+      });
+
+      menuBackdrop.addEventListener('click', closeMenu);
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && !tourMenu.hidden) {
+          closeMenu();
+        }
+      });
+    }
+  </script>
+</body>
+</html>
