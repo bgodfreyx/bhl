@@ -5,14 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>For This Is Zion</title>
   <style>
-
     :root {
       --bg: #f5f5f5;
       --panel: #ffffff;
       --text: #111111;
       --muted: #666666;
       --border: #dddddd;
-      --shadow: 0 6px 18px rgba(0,0,0,0.05);
+      --shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
       --player-height: 106px;
     }
 
@@ -90,8 +89,12 @@
       border-radius: 14px;
       box-shadow: var(--shadow);
       padding: 10px;
-      display: grid;
+      display: none;
       gap: 8px;
+    }
+
+    .menu-panel.open {
+      display: grid;
     }
 
     .menu-link {
@@ -109,8 +112,12 @@
     .backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.12);
+      background: rgba(0, 0, 0, 0.12);
       z-index: 110;
+    }
+
+    .hidden {
+      display: none;
     }
 
     .content {
@@ -125,31 +132,6 @@
       padding: 16px;
     }
 
-    .card + .card,
-    .card + .deep-dive-list,
-    .deep-dive-list + .card {
-      margin-top: 12px;
-    }
-
-    .section-title {
-      margin: 0 0 10px;
-      font-size: 1.15rem;
-    }
-
-    .hero-title {
-      margin: 0 0 12px;
-      font-size: 1.2rem;
-      line-height: 1.2;
-    }
-
-    .tour-description {
-      margin: 0 0 14px;
-      font-size: 0.96rem;
-      line-height: 1.55;
-    }
-
-    .tour-description:last-child { margin-bottom: 0; }
-
     .hero-image {
       height: 180px;
       border-radius: 12px;
@@ -162,6 +144,12 @@
       margin-bottom: 14px;
       padding: 16px;
       text-align: center;
+    }
+
+    .hero-title {
+      margin: 0 0 12px;
+      font-size: 1.2rem;
+      line-height: 1.2;
     }
 
     .hero-meta {
@@ -179,6 +167,14 @@
       flex: 0 0 auto;
     }
 
+    .tour-description {
+      margin: 0 0 14px;
+      font-size: 0.96rem;
+      line-height: 1.55;
+    }
+
+    .tour-description:last-of-type { margin-bottom: 0; }
+
     .cta {
       display: block;
       width: 100%;
@@ -190,118 +186,7 @@
       padding: 14px 16px;
       font-weight: 700;
       border: 1px solid var(--text);
-    }
-
-    .tour-option {
-      display: block;
-      text-decoration: none;
-      color: inherit;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-      box-shadow: var(--shadow);
-    }
-
-    .tour-option h2 {
-      margin: 0;
-      font-size: 1.18rem;
-      line-height: 1.2;
-    }
-
-    .subtitle {
-      margin-top: 4px;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .meta {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 10px;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .start { font-weight: 700; }
-
-    .section-label {
-      margin: 4px 0 2px;
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .deep-dive-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .player-bar {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 130;
-      background: #ffffff;
-      border-top: 1px solid var(--border);
-      box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
-    }
-
-    .player-inner {
-      max-width: 560px;
-      margin: 0 auto;
-      padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
-      display: grid;
-      gap: 8px;
-    }
-
-    .progress-row {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 8px;
-      align-items: center;
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
-
-    .track {
-      height: 6px;
-      border-radius: 999px;
-      background: #e6e6e6;
-      overflow: hidden;
-    }
-
-    .fill {
-      width: 0%;
-      height: 100%;
-      background: #111111;
-      border-radius: 999px;
-    }
-
-    .control-row {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-    }
-
-    .audio-btn {
-      width: 100%;
-      min-height: 44px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: var(--panel);
-      color: var(--text);
-      font-size: 0.94rem;
-      cursor: pointer;
-      padding: 8px 6px;
-    }
-
-    .audio-btn.play {
-      font-weight: 700;
+      margin-top: 16px;
     }
 
     .spacer {
@@ -310,28 +195,84 @@
 
     @media (min-width: 700px) {
       .page-title { font-size: 1.15rem; }
-      .tour-option h2, .hero-title { font-size: 1.28rem; }
+      .hero-title { font-size: 1.28rem; }
     }
-
   </style>
 </head>
 <body>
   <div class="page">
-    <main class="content">
+    <header class="header-shell">
+      <div class="topbar">
+        <a class="back" href="index.html">← Back</a>
+        <h1 class="page-title">For This Is Zion</h1>
+        <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="menuPanel">☰</button>
+      </div>
+      <nav class="menu-panel hidden" id="menuPanel" aria-label="Tour navigation">
+        <a class="menu-link" href="01_Introduction.html">01 Introduction</a>
+        <a class="menu-link" href="02_DefiningZion.html">02 Deeper Dive: Defining Zion</a>
+        <a class="menu-link" href="03_ConnectionsToTheBeehiveAndLionHouses.html">03 Deeper Dive: Connections to the Beehive and Lion Houses</a>
+        <a class="menu-link" href="04_TeachingTheRisingGeneration.html">04 Deeper Dive: Teaching the Rising Generation</a>
+        <a class="menu-link" href="05_SharingTheGospel.html">05 Deeper Dive: Sharing the Gospel</a>
+        <a class="menu-link" href="06_CenteredOnJesusChrist.html">06 Deeper Dive: Centered on Jesus Christ</a>
+        <a class="menu-link" href="07_CaringForThoseInNeed.html">07 Deeper Dive: Caring for Those in Need</a>
+        <a class="menu-link" href="08_UnitingFamiliesForEternity.html">08 Deeper Dive: Uniting Families for Eternity</a>
+        <a class="menu-link" href="09_HowWillYouBuildZion.html">09 Deeper Dive: How Will You Build Zion?</a>
+      </nav>
+    </header>
 
+    <main class="content">
       <section class="card">
         <div class="hero-image">Image Placeholder</div>
-        <h1 class="hero-title">For This Is Zion: Becoming the Lord's People</h1>
+        <h2 class="hero-title">For This Is Zion: Becoming the Lord's People</h2>
         <div class="hero-meta">
-          <svg class="clock-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <svg class="clock-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle>
+            <path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
           <span>20-30 mins</span>
         </div>
         <p class="tour-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum commodo congue convallis. Orci varius montes, nascetur ridiculus mus. Vestibulum consequat vulputate nibh nec condimentum.</p>
         <p class="tour-description">Sed pretium tincidunt leo. Integer odio libero, blandit id orci a, semper convallis mauris. Nulla ac facilisis ex, vitae accumsan quam. Proin laoreet tempus mi, ac aliquet nibh tempor a.</p>
         <a class="cta" href="01_Introduction.html">Start Tour</a>
       </section>
-
     </main>
+    <div class="spacer" aria-hidden="true"></div>
   </div>
+
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const menuPanel = document.getElementById('menuPanel');
+
+    function closeMenu() {
+      menuPanel.classList.add('hidden');
+      menuPanel.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      const existingBackdrop = document.getElementById('backdrop');
+      if (existingBackdrop) existingBackdrop.remove();
+    }
+
+    function openMenu() {
+      menuPanel.classList.remove('hidden');
+      menuPanel.classList.add('open');
+      menuBtn.setAttribute('aria-expanded', 'true');
+      if (!document.getElementById('backdrop')) {
+        const backdrop = document.createElement('div');
+        backdrop.id = 'backdrop';
+        backdrop.className = 'backdrop';
+        backdrop.addEventListener('click', closeMenu);
+        document.body.appendChild(backdrop);
+      }
+    }
+
+    menuBtn.addEventListener('click', () => {
+      const open = menuBtn.getAttribute('aria-expanded') === 'true';
+      if (open) closeMenu();
+      else openMenu();
+    });
+
+    menuPanel.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', closeMenu);
+    });
+  </script>
 </body>
 </html>
