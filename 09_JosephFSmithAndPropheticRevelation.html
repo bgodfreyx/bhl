@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome Galleries</title>
+  <title>Joseph F. Smith and Prophetic Revelation</title>
   <style>
 
         :root {
@@ -324,8 +324,8 @@
 
     <div class="header-shell">
       <header class="topbar">
-        <a class="back" href="index.html" aria-label="Go back">← Back</a>
-        <h1 class="page-title">Welcome Galleries</h1>
+        <a class="back" href="07_ResidentsGallery.html" aria-label="Go back">← Back</a>
+        <h1 class="page-title">Joseph F. Smith and Prophetic Revelation</h1>
         <button class="menu-btn" type="button" aria-label="Open navigation menu" aria-expanded="false">☰</button>
       </header>
       <div class="menu-panel" hidden>
@@ -334,24 +334,116 @@
     </div>
     <div class="backdrop" hidden></div>
     <main class="content">
+
       <section class="card">
-        <div class="hero-image">Image Placeholder</div>
-        <h2 class="hero-title">Welcome Galleries: Discover the most historic homes on Temple Square</h2>
-        <div class="hero-meta">
-          <svg class="clock-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle>
-            <path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
-          <span>Start exploring the galleries</span>
-        </div>
-        <p class="tour-description">Welcome to the Beehive and Lion Houses Historic Site. This tour introduces the buildings and the people who lived and worked here, then leads you into the galleries and the self-guided audio experiences.</p>
-      <p class="tour-description">Choose the start button below to begin the gallery experience, or use the menu to jump to any of the main tour stops.</p>
-        <a class="cta" href="01_RoomIntroduction.html">Begin tour ▶</a>
+        <h2 class="hero-title">Deeper Dive: Joseph F. Smith and Prophetic Revelation</h2>
+<p class="tour-description">After Brigham Young and Lorenzo Snow, Joseph F. Smith became the third President of the Church to live in the Beehive House. He lived here with one of his five plural wives, Julina, and their younger children.</p>
+<p class="tour-description">As a residence for prophets, the Beehive House became a place of revelation from God. Here, revelation was sought, received, shared, and implemented. In October 1918, while sitting in his room in the Beehive House, Joseph F. Smith received a divine vision from the Lord about the afterlife, which would come to be known as the vision of the redemption of the dead. This revelation was later canonized as section 138 of the Doctrine and Covenants and has provided guidance and encouragement for Latter-day Saints to extend the blessings of the gospel of Jesus Christ and eternal families to those who have died.</p>
+<p class="tour-description">If you are interested, please take a moment to explore the photos of the prophet’s family and view Joseph F. Smith’s original chair on display.</p>
       </section>
+
+      <div style="height: 6px;"></div>
     </main>
   </div>
-  
+
+  <div class="player-bar" role="region" aria-label="Audio controls">
+    <div class="player-inner">
+      <div class="progress-row" aria-hidden="true">
+        <span class="time elapsed" id="elapsed">0:00</span>
+        <div class="track"><div class="fill" id="fill"></div></div>
+        <span class="time remaining" id="remaining">0:00</span>
+      </div>
+      <div class="control-row">
+        <button class="audio-btn" id="toStartBtn" aria-label="Skip to start">|&lt;</button>
+        <button class="audio-btn" id="back15Btn" aria-label="Skip back 15 seconds">-15</button>
+        <button class="audio-btn play" id="playPauseBtn" aria-label="Play audio">Play ▶</button>
+        <button class="audio-btn" id="forward15Btn" aria-label="Skip forward 15 seconds">15+</button>
+        <button class="audio-btn" id="toEndBtn" aria-label="Skip to end">&gt;|</button>
+      </div>
+    </div>
+  </div>
+  <audio id="audio">
+    <source src="introtour/09_RG_JosephFSmith.mp3" type="audio/mpeg">
+    Your browser does not support audio.
+  </audio>
+
   <script>
+    const audio = document.getElementById('audio');
+    const toStartBtn = document.getElementById('toStartBtn');
+    const back15Btn = document.getElementById('back15Btn');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const forward15Btn = document.getElementById('forward15Btn');
+    const toEndBtn = document.getElementById('toEndBtn');
+    const elapsedEl = document.getElementById('elapsed');
+    const remainingEl = document.getElementById('remaining');
+    const fillEl = document.getElementById('fill');
+
+    let rafId = null;
+
+    function fmt(sec) {
+      if (!Number.isFinite(sec) || sec < 0) sec = 0;
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function clampTime(time) {
+      if (!Number.isFinite(audio.duration)) return Math.max(0, time);
+      return Math.min(Math.max(0, time), audio.duration);
+    }
+
+    function updateProgress() {
+      const duration = Number.isFinite(audio.duration) ? audio.duration : 0;
+      const current = Number.isFinite(audio.currentTime) ? audio.currentTime : 0;
+      const pct = duration > 0 ? Math.min(100, Math.max(0, (current / duration) * 100)) : 0;
+      elapsedEl.textContent = fmt(current);
+      remainingEl.textContent = fmt(Math.max(0, duration - current));
+      fillEl.style.width = `${pct}%`;
+    }
+
+    function syncButton() {
+      playPauseBtn.textContent = audio.paused ? 'Play ▶' : 'Pause ❚❚';
+      playPauseBtn.setAttribute('aria-label', audio.paused ? 'Play audio' : 'Pause audio');
+    }
+
+    function tick() {
+      updateProgress();
+      if (!audio.paused && !audio.ended) {
+        rafId = requestAnimationFrame(tick);
+      }
+    }
+
+    toStartBtn.addEventListener('click', () => { audio.currentTime = 0; updateProgress(); });
+    back15Btn.addEventListener('click', () => { audio.currentTime = clampTime(audio.currentTime - 15); updateProgress(); });
+    forward15Btn.addEventListener('click', () => { audio.currentTime = clampTime(audio.currentTime + 15); updateProgress(); });
+    toEndBtn.addEventListener('click', () => {
+      if (Number.isFinite(audio.duration)) {
+        audio.currentTime = Math.max(0, audio.duration - 0.1);
+        updateProgress();
+      }
+    });
+
+    playPauseBtn.addEventListener('click', async () => {
+      if (audio.paused) {
+        try { await audio.play(); } catch (err) { return; }
+      } else {
+        audio.pause();
+      }
+      syncButton();
+    });
+
+    audio.addEventListener('loadedmetadata', updateProgress);
+    audio.addEventListener('play', () => { syncButton(); cancelAnimationFrame(rafId); tick(); });
+    audio.addEventListener('pause', () => { syncButton(); cancelAnimationFrame(rafId); updateProgress(); });
+    audio.addEventListener('ended', () => { syncButton(); cancelAnimationFrame(rafId); updateProgress(); });
+
+    // progress should move even if a browser fires sparse timeupdate events
+    audio.addEventListener('timeupdate', updateProgress);
+
+    updateProgress();
+    syncButton();
+
+    // Menu handling
     const menuBtn = document.querySelector('.menu-btn');
     const menuPanel = document.querySelector('.menu-panel');
     const backdrop = document.querySelector('.backdrop');
